@@ -1,9 +1,14 @@
 import { Octokit } from "octokit";
-
+ 
 const octokit = new Octokit({
-  auth: "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",
+  auth: process.env.REACT_APP_API_KEY,
 });
 
+export const getUserData = (login) => {
+  return octokit.request(`GET /users/${login}`, {
+
+  });
+};
 export const getUsersData = (q) => {
   return octokit.request("GET /search/users", {
     q: q || "created:>2022-01-01",

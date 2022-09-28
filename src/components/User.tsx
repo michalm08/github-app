@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { UserDataInterface } from "../Pages/MainPage";
 import "./RepoAndUser.scss";
 
@@ -12,7 +13,7 @@ const User: React.FC<UserPropsInterface> = ({ el: user }) => {
         <img src={user.avatar_url} alt='user name photo' />
       </div>
       <div className='content-container'>
-        <p className='maintitle'>{user.name}</p>
+        <Link to={`/profile/${user.name}`} className='maintitle'>{user.name}</Link>
         <p className='subtitle'>{user.title}</p>
         <p className='uses-description'>{user.description}</p>
         <p className='user-city'>{user.city}</p>

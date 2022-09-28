@@ -26,6 +26,10 @@
 }
 
 .user {
+  .maintitle {
+    cursor: pointer;
+    text-decoration: none;
+  }
   .user-description {
     color: black;
     margin-bottom: 8px;

@@ -1,0 +1,39 @@
+@import "/src/styles/colors.scss";
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 45px;
+  &__avatar {
+    border-radius: 50%;
+    width: 296px;
+    height: 296px;
+    margin-bottom: 16px;
+  }
+  &__name {
+    font-size: 26px;
+    font-weight: 500;
+  }
+  &__login {
+    font-size: 20px;
+    color: $dark-gray2;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .bottom-container {
+    display: flex;
+    align-items: center;
+    color: $dark-gray2;
+    font-size: 12px;
+    font-weight: 500;
+    img {
+      height: 12px;
+      margin-right: 3px;
+    }
+    &__followers,
+    &__following {
+      margin-right: 20px;
+    }
+  }
+}
