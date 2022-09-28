@@ -1,4 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 * {
   margin: 0;
   padding: 0;
 }
+
+/* //czy tak mozna zobacz */
+body{
+  font-family: 'Roboto', sans-serif;
+}
+.secondary-font{
+  /* font-family: 'Montserrat', sans-serif; */
+  font-family: serif;
+
+}
+/* lol inny font jest w search na pierwszej stronie i na innych */
+
+/* //ten inny font ma Search,nr gwiazdki,mainTitle-profilu,nr gwiazdki w profilu   */

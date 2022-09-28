@@ -1,0 +1,17 @@
+.main-page-container {
+  display: flex;
+  justify-content: center;
+  height: calc(100vh - 72px);
+  overflow: scroll;
+  margin: 0 16px;
+  .main-page {
+    flex: 1;
+    max-width: 920px;
+    .number {
+      margin-bottom: 20px;
+      margin: 34px 0 20px;
+    }
+
+
+  }
+}
