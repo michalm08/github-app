@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { getReposData, getUsersData } from "../services";
 
@@ -27,6 +27,10 @@ export interface RepoDataInterface extends UserRepoDataInterface {
   language: string;
   updated_at: string;
   license: string;
+}
+
+interface MainPagePropsInterface{
+  searchInput:string;
 }
 
 const shuffle = (array: any[]) => {
@@ -60,22 +64,35 @@ const convertDisplayOfNumber = (number: number) => {
   }
   return numberAsStringToReturn;
 };
-
-const MainPage = () => {
+const MainPage:React.FC<MainPagePropsInterface> = ({ searchInput }) => {
   const [datas, setDatas] = useState<UserDataInterface[] | RepoDataInterface[]>(
     []
-  );
-  const [numberOfResults, setNumberOfResults] = useState(0);
-  const [loaded, setLoaded] = useState(false);
+    );
+    
+  const [numberOfResults, setNumberOfResults] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    takeData();
+    takeData("");
   }, []);
 
-  const takeData = async () => {
+  useEffect(() => {
+    //debounce effect
+    const delayDebounceFn = setTimeout(() => {
+      takeData(searchInput);
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchInput]);
+
+  const takeData = async (query: string) => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
     let datasArray: (UserDataInterface | RepoDataInterface)[] = [];
 
-    getUsersData("sample user").then((userResponse) => {
+    getUsersData(query).then((userResponse) => {
       userResponse.data.items.forEach((user) => {
         datasArray.push({
           type: "user",
@@ -87,7 +104,7 @@ const MainPage = () => {
           avatar_url: user.avatar_url,
         });
       });
-      getReposData("ko").then((repoResponse) => {
+      getReposData(query).then((repoResponse) => {
         repoResponse.data.items.forEach((repo) =>
           datasArray.push({
             type: "repo",
@@ -103,36 +120,39 @@ const MainPage = () => {
           userResponse.data.total_count + repoResponse.data.total_count
         );
         setDatas(shuffle(datasArray));
-        setLoaded(true);
+        // setLoaded(true);
+        setLoading(false);
       });
     });
   };
 
   return (
     <>
-      {loaded ? (
-        <div className='main-page-container'>
-          <div className='main-page'>
+      {loading && (
+        <div className='loader-container'>
+          <div className='loader' />
+        </div>
+      )}
+      <div className='main-page-container'>
+        <div className='main-page'>
+          {!!numberOfResults && (
             <div className='number'>
               {convertDisplayOfNumber(numberOfResults)} results
             </div>
-            <div className='results'>
-              <p>nowe dynamiczne</p>
-              {datas.map((el,index) => (
-                <div key={index}>
-                  {el.type === "user" ? (
-                    <User el={el as UserDataInterface} />
-                  ) : (
-                    <Repo el={el as RepoDataInterface} />
-                  )}
-                </div>
-              ))}
-            </div>
+          )}
+          <div className='results'>
+            {datas.map((el, index) => (
+              <div key={index}>
+                {el.type === "user" ? (
+                  <User el={el as UserDataInterface} />
+                ) : (
+                  <Repo el={el as RepoDataInterface} />
+                )}
+              </div>
+            ))}
           </div>
         </div>
-      ) : (
-        <p>loading...</p>
-      )}
+      </div>
     </>
   );
 };

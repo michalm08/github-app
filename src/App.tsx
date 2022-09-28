@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, Outlet, Link } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
@@ -7,10 +7,11 @@ import MainPage from './Pages/MainPage';
 import Profile from './Pages/Profile';
 
 function App() {
+  const [searchInput, setSearchInput] = useState("")
   return (
     <Routes>
-      <Route path='/' element={<Header />}>
-        <Route index element={<MainPage />} />
+      <Route path='/' element={<Header searchInput={searchInput} setSearchInput={setSearchInput} />}>
+        <Route index element={<MainPage searchInput={searchInput}/>} />
         <Route path='/profile' element={<Profile />} />
         <Route path='*' element={<Lost />} />
       </Route>

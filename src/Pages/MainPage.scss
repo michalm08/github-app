@@ -1,9 +1,11 @@
+@import '/src/styles/colors.scss';
+
 .main-page-container {
   display: flex;
   justify-content: center;
   height: calc(100vh - 72px);
   overflow: scroll;
-  margin: 0 16px;
+  padding: 0 16px;
   .main-page {
     flex: 1;
     max-width: 920px;
@@ -13,5 +15,35 @@
     }
 
 
+  }
+
+}
+.loader-container {
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  // margin-top: 150px;
+  background-color: rgba(0, 0, 0, 0.329);
+  
+  .loader {
+    border: 12px solid #f3f3f3; 
+    border-top: 12px solid $light-blue;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

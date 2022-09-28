@@ -4,6 +4,8 @@
   display: flex;
   justify-content: center;
   background-color: $bg-black;
+  z-index: 2;
+  position: relative;
   .header {
     flex: 1;
     display: flex;
