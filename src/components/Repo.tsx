@@ -1,16 +1,30 @@
-import React from "react";
-import "./RepoAndUser.scss";
-import { RepoDataInterface } from "../Pages/MainPage";
+import React from 'react';
+import './RepoAndUser.scss';
+import { RepoDataInterface } from '../Pages/MainPage';
 /* @ts-ignore */
-import star from "../assets/star.svg";
+import star from '../assets/star.svg';
 /* @ts-ignore */
-import repoIcon from "../assets/repo.svg";
+import repoIcon from '../assets/repo.svg';
+import moment from 'moment';
 
 interface RepoPropsInterface {
   el: RepoDataInterface;
 }
 
 const Repo: React.FC<RepoPropsInterface> = ({ el: repo }) => {
+
+  const convertDate = (date: string) => {
+    let valueToReturn = 'Updated ';
+    let now = moment();
+    let createdDate = moment(date);
+    if (now.diff(createdDate, 'days') <= 30) {
+      valueToReturn += createdDate.from(now);
+    } else {
+      valueToReturn = valueToReturn + 'on ' + createdDate.format('D MMM YYYY');
+    }
+    return valueToReturn;
+  };
+
   return (
     <div className='repo result'>
       <div className='image-container'>
@@ -35,8 +49,7 @@ const Repo: React.FC<RepoPropsInterface> = ({ el: repo }) => {
               <p>{repo.license}</p>
             </div>
           )}
-
-          <p className='low-section__element'>{repo.updated_at}</p>
+          <p className='low-section__element'>{convertDate(repo.updated_at)}</p>
         </div>
       </div>
     </div>
