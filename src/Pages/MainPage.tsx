@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 
-import { getReposData, getUsersData } from "../services";
+import { getReposData, getUsersData } from '../services';
 
-import "./MainPage.scss";
+import './MainPage.scss';
 
-import User from "../components/User";
-import Repo from "../components/Repo";
+import User from '../components/User';
+import Repo from '../components/Repo';
 
 interface UserRepoDataInterface {
   type: string;
@@ -29,8 +29,8 @@ export interface RepoDataInterface extends UserRepoDataInterface {
   license: string;
 }
 
-interface MainPagePropsInterface{
-  searchInput:string;
+interface MainPagePropsInterface {
+  searchInput: string;
 }
 
 const shuffle = (array: any[]) => {
@@ -50,7 +50,7 @@ const shuffle = (array: any[]) => {
 };
 
 const convertDisplayOfNumber = (number: number) => {
-  let numberAsStringToReturn = "";
+  let numberAsStringToReturn = '';
   const numberAsString = number.toString();
 
   for (let i = 0; i < numberAsString.length; i++) {
@@ -59,21 +59,22 @@ const convertDisplayOfNumber = (number: number) => {
       (numberAsString.length - i - 1) % 3 === 0 &&
       i + 1 !== numberAsString.length
     ) {
-      numberAsStringToReturn += ",";
+      numberAsStringToReturn += ',';
     }
   }
   return numberAsStringToReturn;
 };
-const MainPage:React.FC<MainPagePropsInterface> = ({ searchInput }) => {
+const MainPage: React.FC<MainPagePropsInterface> = ({ searchInput }) => {
   const [datas, setDatas] = useState<UserDataInterface[] | RepoDataInterface[]>(
     []
-    );
-    
+  );
+
   const [numberOfResults, setNumberOfResults] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isLoadFailed, setIsLoadFailed] = useState<boolean>(false);
 
   useEffect(() => {
-    takeData("");
+    takeData('');
   }, []);
 
   useEffect(() => {
@@ -92,38 +93,47 @@ const MainPage:React.FC<MainPagePropsInterface> = ({ searchInput }) => {
     setLoading(true);
     let datasArray: (UserDataInterface | RepoDataInterface)[] = [];
 
-    getUsersData(query).then((userResponse) => {
-      userResponse.data.items.forEach((user) => {
-        datasArray.push({
-          type: "user",
-          name: user.login,
-          profile_url: user.url,
-          title: "Nice guy",
-          city: "London, England",
-          description: "Just a guy who likes to make things @MichalYouDoing",
-          avatar_url: user.avatar_url,
-        });
-      });
-      getReposData(query).then((repoResponse) => {
-        repoResponse.data.items.forEach((repo) =>
+    getUsersData(query)
+      .then((userResponse) => {
+        userResponse.data.items.forEach((user) => {
           datasArray.push({
-            type: "repo",
-            full_name: repo.full_name,
-            description: repo.description || "",
-            stargazers_count: repo.stargazers_count,
-            language: repo.language || "",
-            updated_at: repo.updated_at,
-            license: repo.license ? repo.license.name : "",
+            type: 'user',
+            name: user.login,
+            profile_url: user.url,
+            title: 'Nice guy',
+            city: 'London, England',
+            description: 'Just a guy who likes to make things @MichalYouDoing',
+            avatar_url: user.avatar_url,
+          });
+        });
+        getReposData(query)
+          .then((repoResponse) => {
+            repoResponse.data.items.forEach((repo) =>
+              datasArray.push({
+                type: 'repo',
+                full_name: repo.full_name,
+                description: repo.description || '',
+                stargazers_count: repo.stargazers_count,
+                language: repo.language || '',
+                updated_at: repo.updated_at,
+                license: repo.license ? repo.license.name : '',
+              })
+            );
+            setNumberOfResults(
+              userResponse.data.total_count + repoResponse.data.total_count
+            );
+            setDatas(shuffle(datasArray));
+            // setLoaded(true);
+            setLoading(false);
           })
-        );
-        setNumberOfResults(
-          userResponse.data.total_count + repoResponse.data.total_count
-        );
-        setDatas(shuffle(datasArray));
-        // setLoaded(true);
-        setLoading(false);
-      });
-    });
+          .catch(loadFailed);
+      })
+      .catch(loadFailed);
+  };
+
+  const loadFailed = () => {
+    setLoading(false);
+    setIsLoadFailed(true);
   };
 
   return (
@@ -132,6 +142,11 @@ const MainPage:React.FC<MainPagePropsInterface> = ({ searchInput }) => {
         <div className='loader-container'>
           <div className='loader' />
         </div>
+      )}
+      {isLoadFailed && (
+        <p>
+          load failed...
+        </p>
       )}
       <div className='main-page-container'>
         <div className='main-page'>
@@ -143,7 +158,7 @@ const MainPage:React.FC<MainPagePropsInterface> = ({ searchInput }) => {
           <div className='results'>
             {datas.map((el, index) => (
               <div key={index}>
-                {el.type === "user" ? (
+                {el.type === 'user' ? (
                   <User el={el as UserDataInterface} />
                 ) : (
                   <Repo el={el as RepoDataInterface} />

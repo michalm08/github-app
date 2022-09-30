@@ -7,13 +7,17 @@ import MainPage from './Pages/MainPage';
 import Profile from './Pages/Profile';
 
 function App() {
-  const [searchInput, setSearchInput] = useState("")
+  const [searchInput, setSearchInput] = useState<string>('');
 
-  
   return (
     <Routes>
-      <Route path='/' element={<Header searchInput={searchInput} setSearchInput={setSearchInput} />}>
-        <Route index element={<MainPage searchInput={searchInput}/>} />
+      <Route
+        path='/'
+        element={
+          <Header searchInput={searchInput} setSearchInput={setSearchInput} />
+        }
+      >
+        <Route index element={<MainPage searchInput={searchInput} />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/profile/:login' element={<Profile />} />
         <Route path='*' element={<Lost />} />
